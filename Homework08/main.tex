@@ -1,0 +1,272 @@
+%--------- Student instruction: change this by adding your neu id into the {}
+\def\yourname{patel.nisargs}
+%-------------------------------------------------------------------------------------------------------------
+
+%% ================= no need to edit any of this stuff
+% --- no need to change anything in this section -----------------------------------------------------
+\def\homework{1} % 0 for solution, 1 for problem-set only
+\def\duedate{fri apr 15, 2022 at 11.59p}
+\def\duelocation{via \href{https://gradescope.com/courses/331917}{gradescope}}
+\def\hnumber{8}
+\def\prof{abhi shelat}
+\def\course{\href{https://shelat.khoury.neu.edu/22s-5800}{cs5800 algorithms s'22}}
+
+\documentclass[11pt]{article}
+%%% ==== standard installations of latex include all of the files that are referenced in this section.  However,
+%%% ==== if you are having compile problems, consider commenting some of these commands out 
+\usepackage[colorlinks,urlcolor=blue]{hyperref}
+\usepackage[osf]{mathpazo}
+\usepackage{amsmath,amsfonts,graphicx}
+\usepackage{latexsym}
+\usepackage[top=1in,bottom=1.3in,left=1.5in,right=1.5in,centering]{geometry}
+\usepackage{color}
+\usepackage{clrscode}
+\definecolor{mdb}{rgb}{0.3,0.02,0.02} 
+\definecolor{cit}{rgb}{0.05,0.2,0.45} 
+\markboth{\yourname}{\yourname}
+%%% ===================================================================
+
+
+%%% ============ should be no need to edit anything in this section ====================
+\newenvironment{proof}{\par\noindent{\it Proof.}\hspace*{1em}}{$\Box$\bigskip}
+\newcommand{\qed}{$\Box$}
+\newcommand{\alg}[1]{\mathsf{#1}}
+\newcommand{\handout}{
+   \renewcommand{\thepage}{H\hnumber-\arabic{page}}%
+   \noindent%
+   \begin{center}%
+      \vbox{%
+    \hbox to \columnwidth {\sc{\course} --- abhi shelat \hfill}%
+    \vspace{-2mm}%
+    \hbox to \columnwidth {\sc due \MakeLowercase{\duedate} \duelocation\hfill {\Huge\color{mdb}H\hnumber.\yourname}}%
+      }
+   \end{center}
+   \vspace*{2mm}
+}
+\newcommand{\solution}[1]{\medskip\noindent\textbf{Solution:}#1}
+\newcommand{\bit}[1]{\{0,1\}^{ #1 }}
+\newtheorem{problem}{\sc\color{cit}problem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+%%% ===================================================================
+\thispagestyle{empty}
+
+\begin{document}\handout
+
+
+\begin{problem}Number of shortest paths\end{problem}
+Given a graph $G=(V,E)$ with unit edge weights, and a starting node $s$, let $\delta(s,v)$ be the length of the shortest path between $s$ and $v$ (i.e., the smallest number of edges between $s$ and $v$).
+
+Define a new variable $n_{v}$ which records the number of distinct shortest paths from $s$ to $v$ that have length $\delta(s,v)$ for every node in $V$.  Design an algorithm that computes $n_v$ for all nodes in $V$. Analyze the running time of the algorithm, and provide one-two sentence explanation for why the algorithm works.
+
+\hfill
+
+\noindent\textbf{Solution:}
+We can solve this problem by modifying Breadth-First Search algorithm as follows:
+\begin{codebox}
+    \Procname{$\proc{CountShortestPaths}(V,E,s)$}
+    \li \textbf{for} each $u \in V-\{s\}$
+    \li \quad $(d_u, n_u) \leftarrow (\infty, 0)$
+    \li $(d_s, n_s) \leftarrow (0, 1)$
+    \li $Q \leftarrow \phi$
+    \li $\proc{Enqueue}(Q,s)$
+    \li \textbf{while} $Q \neq \phi$
+    \li \quad $u \leftarrow \proc{Dequeue}(Q)$
+    \li \quad \textbf{for} each $v \in Adj(u)$
+    \li \quad \quad \textbf{if} $d_v > d_u + 1$
+    \li \quad \quad \quad $(d_v, n_v) \leftarrow (d_u + 1, n_u)$
+    \li \quad \quad \quad $\proc{Enqueue}(Q,v)$
+    \li \quad \quad \textbf{else if} $d_v = d_u + 1$
+    \li \quad \quad \quad $n_v \leftarrow n_v+n_u$
+    \li \textbf{return} $n$
+\end{codebox}
+
+\textbf{Time Complexity Analysis:}\\
+The running time complexity remains same as of BFS.\\
+Time Complexity of $\proc{CountShortestPaths}(V,E,s)$ is $\Theta (V+E)$.\\
+
+\textbf{Correctness:}\\
+Let $p$ be any shortest path from $s$ to $v$ then there exists a node $u$ adjecent to $v$ which is before $v$ in $p$($s \rightarrow \ldots \rightarrow u \rightarrow v$) such that $\delta(s,v) = \delta(s,u)+1$. Thus adding distinct shortest paths of each $u$ satisfying the above condition, gives the distinct shortest paths for $v$.
+\newpage
+\begin{problem}Sparse graphs and short paths\end{problem}
+
+\noindent Let $G=(V,E)$ be a directed graph with edge weights $w(e)$ and no negative cycles.
+
+\begin{enumerate}
+
+\item State the run time of the All-pairs shortest path algorithm discussed in class.
+
+
+\item Consider the following algorithm.
+
+\begin{codebox}
+\Procname{$\proc{AnotherShortest}(G,w)$}
+\li Add a new node $s'$ to $G$. Add edges of weight $0$ from $s'$ to every vertex $v\in V$.\\
+Call this new graph $G'$.
+\li Run $\proc{BellmanFord}(G',s')$ to produce shortest path lengths $\delta(s',v)$.\\
+If shortest paths are not well-defined, than halt.
+\li For each $e=(x,y)\in E$, set $w'(e) \gets w(e) + \delta(s',x) - \delta(s',y)$
+\li For each $u\in V$, run $\proc{Dijkstra}(G,u,w')$ to compute $\delta(u,v)$ for all $v\in V$.
+\li Set $d_{u,v} \gets \delta(u,v) - \delta(s',u) + \delta(s',v)$
+\end{codebox}
+
+\noindent This problem will analyze what this algorithm does and why it works.  The first step is to argue that the new edge weights $w'$ that are defined in step (3) are all non-negative.
+
+Prove that for all $e\in E$, $w'(e) \geq 0$.
+
+
+\item This explains why we can use the fast $\proc{Dijkstra}$ algorithm with edge weight $w'$ in step (4) to compute shortest paths from node $v\in V$ to all other nodes in the graph.  However, we must argue that the shortest paths under $w'$ and under $w$ will be the same shortest path.
+
+ Prove that for any pairs of nodes $u,v\in V$, if $p$ is a shortest path from $u$ to $v$
+with respect to edge weight function $w'$, then $p$ is also a shortest path from $u$ to $v$ with respect to
+edge weight function $w$.
+
+
+\item  What is the running time of $\proc{AnotherShortest}$ in terms of $V$ and $E$?  When
+does this algorithm run faster than the All-pairs algorithm discussed in class?
+\end{enumerate}
+
+\noindent\textbf{Solution:}
+\begin{enumerate}
+    \item Floyd-Warshall All-pairs shortest path has time complexity $\Theta(V^3)$.
+    
+    \item For any edge $e(x,y)$, applying triangle inequality, we have:
+        \begin{equation}\label{Q2_1}
+            \begin{split}
+                \delta(s',y) \leq \delta(s',x) + w(e)\\
+                \delta(s',x) + w(e) - \delta(s',y) \geq 0\\
+                w'(e) \geq 0
+            \end{split}
+        \end{equation}
+        Thus for all $e\in E$, $w'(e) \geq 0$.
+        
+    \item For any path $p = (u,x_1, x_2,...,x_n, v)$ computed on $w'$, we have:
+    \begin{equation}\label{Q2_2}
+        \begin{split}
+            w'(p) = \delta(u,v) &= w'(u, x_1)+w'(u, x_2)+...+w'(x_n, v)\\
+                &= w(u, x_1)+\delta(s', u)-\delta(s', x_1)\\
+                &\quad +w(x_1, x_2)+\delta(s', x_1)-\delta(s', x_2)\\
+                &\quad +\ldots\\
+                &\quad +w(x_n, v)+\delta(s', x_n)-\delta(s', v)\\
+                w'(p) &= w(p)+\delta(s', u)-\delta(s', v)
+        \end{split}
+    \end{equation}
+    
+    Let $p$ be the shortest path between $u$ and $v$ calculated on $w'$. Let $p*$ be the shortest path between $u$ and $v$ computed on $w$. Then we have,
+    \begin{equation}\label{Q2_3}
+        \begin{split}
+            w(p*) &\leq w(p)
+        \end{split}
+    \end{equation}
+    And,
+    \begin{equation}\label{Q2_4}
+        \begin{split}
+            w'(p) &\leq w'(p*)\\
+            w(p)+\delta(s', u)-\delta(s', v) &\leq w(p*)+\delta(s', u)-\delta(s', v)\\
+            w(p) &\leq w(p*)
+        \end{split}
+    \end{equation}
+    
+    Thus, from \eqref{Q2_3} and \eqref{Q2_4}, we have $w(p) = w(p*)$. So $p$ is also the shortest path between $u$ and $v$ computed on $w$. Hence proved.
+    
+    \item \textbf{Time Complexity Analysis of $\proc{AnotherShortest}(G,w)$:}
+    \begin{enumerate}
+        \item Line $1$ takes $\Theta(V)$. The new graph $G'$ has $V'=V+1$ vertices and $E'=E+V$ edges.
+        \item Line $2$ runs $\proc{BellmanFord}(G',s')$ in $\Theta(V(E+V))$.
+        \item Line $3$ runs in $\Theta(E)$.
+        \item Line $4$ runs $\proc{Dijkstra}(G,u,w')$ for $V$ nodes, runtime: $\Theta(V(V+E)\log(V))$.
+        \item Line $5$ runs in $\Theta(V^2)$.
+    \end{enumerate}
+    The overall time complexity is predominated by line $4$, $\Theta(V(V+E)\log(V))$.\\
+    
+    \textbf{Comparision with Floyd–Warshall:}\\
+    This algorithm will have same time complexity as Floyd-Warshall when $E$ is $\Theta(V^2/\log(V))$. Thus it will be faster for $E = \Theta(1)$ or $\Theta(V)$. Hence this algorithm works better on sparse graphs.
+
+\end{enumerate}
+
+
+\newpage
+
+\begin{problem} Edmonds-Karp shortest paths\end{problem}
+In class, we stated that in the Edmonds-Karp maxflow algorithm, the length of
+shortest paths in $G$ are monotonically increasing.  However, this is not obvious because as we add augmenting paths, new edges are introduced to the graph. In this problem, we will prove the following:
+
+\begin{lemma}
+For any $j>i$ and for any $u\in V$,  $\delta_j(s,u) \geq \delta_i(s,u)$.  
+\end{lemma}
+%
+
+\noindent The proof will be by contradiction.
+Suppose not, for the sake of contradiction.
+Let $i$ be the first time that the shortest path distance to some node decreases after pushing flow along the $i$\textsuperscript{th} augmentation.
+Moreover, let $v$ be the \emph{node with the smallest} distance to $s$ at $i+1$ for which  $\delta_i(s,v) > \delta_{i+1}(s,v)$. Let $p_i,p_{i+1}$ be respective shortest paths from $s$ to $v$ at times $i$ and $i+1$.
+
+\medskip
+
+Each answer should be roughly 1 sentence. You may refer to steps (1)--(7) in your explanations.
+
+\begin{enumerate}
+    \item Define node $u$ to be the node that occurs before $v$ on path $p_{i+1}$.  The first claim is that $\delta_{i+1}(s,u) \geq \delta_i(s,u)$.
+    Why does this follow? (one sentence)
+    
+    \item Next, explain why $\delta_{i+1}(s,v) = \delta_{i+1}(s,u) + 1$. 
+    
+    \item Explain why edge $e_{i+1}=(u, v)$ did not exist in the graph at time $i$. 
+    
+    \item Thus, the edge $e_{i+1}$ must have been added after the $i$ flow, which implies that the augmenting path at $i$ took the form $s\leadsto v \rightarrow u \leadsto t$ , i.e., that pushed flow from $v$ to $u$.
+    %    
+    Explain why at time $i$, we have
+    $$\delta_{i}(s,u) = \delta_{i}(s,v)+1$$
+
+    \item Explain why (4) implies
+    $$\delta_{i+1}(s,u) \geq \delta_i(s,v)+1$$
+    %
+    \item Adding one to each side, we have
+    $$\delta_{i+1}(s,u) +1 \geq \delta_i(s,v)+2$$
+    Explain why this implies that
+    $$\delta_{i+1}(s,v) \geq \delta_i(s,v)+2$$
+    \item Explain why the last statement in (6) is a contradiction.
+\end{enumerate}
+\newpage
+\noindent\textbf{Solution:}
+
+\begin{enumerate}
+    \item Since at $i+1$, $v$ is the node with smallest distance to $s$ for which $\delta_{i+1}(s,v) < \delta_{i}(s,v)$, and $u$ occurs before $v$ on path $p_{i+1}$, then
+    $$\delta_{i+1}(s,u) \geq \delta_i(s,u)$$
+    
+    \item As $u$ is the node that occurs just before $v$ on shortest path $p_{i+1}$,
+    $$\delta_{i+1}(s,v) = \delta_{i+1}(s,u) + 1$$
+    
+    \item Now from the given condition, we have:
+        \begin{equation}\label{Q3_1}
+            \begin{split}
+                \delta_{i}(s,v) &> \delta_{i+1}(s,v)\\
+                \delta_{i}(s,v) &> \delta_{i+1}(s,u)+1 \quad \text{From 2}\\
+                \delta_{i}(s,v) &> \delta_{i}(s,u)+1 \quad \text{From 1}\\
+            \end{split}
+        \end{equation}
+        If edge $e_{i+1}=(u, v)$ exist at time $i$, then $\delta_{i}(s,v) \leq \delta_{i}(s,u)+1$ based on triangle inequality which contradicts the above result. Hence edge $e_{i+1}=(u, v)$ does not exist at time $i$. 
+        
+    \item Based on result of $3$, edge $e_{i+1}=(u, v)$ must be added after the $i$ flow, and the augmenting path at $i$ took $s\leadsto v \rightarrow u \leadsto t$.Thus $v$ comes before $u$ at time $i$. Hence,
+        $$\delta_{i}(s,u) = \delta_{i}(s,v)+1$$
+        
+    \item Since, $\delta_{i+1}(s,u) \geq \delta_i(s,u)$, (From 1). Substituting 5 in it, we have:
+    $$\delta_{i+1}(s,u) \geq \delta_{i}(s,v)+1$$
+    
+    \item 
+        \begin{equation}\label{Q3_2}
+            \begin{split}
+                \delta_{i+1}(s,u) &\geq \delta_{i}(s,v)+1 \quad \text{From 5}\\
+                \delta_{i+1}(s,u)+1 &\geq \delta_{i}(s,v)+2\\
+                \delta_{i+1}(s,v) &\geq \delta_{i}(s,v)+2 \quad \text{From 2}
+            \end{split}
+        \end{equation}
+    
+    \item The last equation in 6 contradicts our initial assumption: $\delta_{i+1}(s,v) < \delta_{i}(s,v)$.\\
+    Thus for every node $v$, we have $\delta_{i+1}(s,v) \geq \delta_{i}(s,v)$ for any time $i$.\\
+    Let $j > i$, then we have $\delta_{j}(s,v) \geq \delta_{j-1}(s,v) \geq ... \geq \delta_{i+1}(s,v) \geq \delta_{i}(s,v)$.\\
+    Hence our lemma holds.
+    
+\end{enumerate}
+
+\end{document}

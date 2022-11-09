@@ -1,0 +1,323 @@
+%--------- Student instruction: change this by adding your neu id into the {}
+\def\yourname{patel.nisargs}
+%-------------------------------------------------------------------------------------------------------------
+
+%% ================= no need to edit any of this stuff
+% --- no need to change anything in this section -----------------------------------------------------
+\def\homework{1} % 0 for solution, 1 for problem-set only
+\def\duedate{wed mar 2, 2022 at 11.59p}
+\def\duelocation{via \href{https://gradescope.com/courses/331917}{gradescope}}
+\def\hnumber{2}
+\def\prof{abhi shelat}
+\def\course{\href{https://shelat.khoury.neu.edu/22s-5800}{cs5800 algorithms s'22}}
+
+\documentclass[11pt]{article}
+%%% ==== standard installations of latex include all of the files that are referenced in this section.  However,
+%%% ==== if you are having compile problems, consider commenting some of these commands out 
+\usepackage[colorlinks,urlcolor=blue]{hyperref}
+\usepackage[osf]{mathpazo}
+\usepackage{amsmath,amsfonts,graphicx}
+\usepackage{latexsym}
+\usepackage[top=1in,bottom=1.4in,left=1.5in,right=1.5in,centering]{geometry}
+\usepackage{color}
+\definecolor{mdb}{rgb}{0.3,0.02,0.02} 
+\definecolor{cit}{rgb}{0.05,0.2,0.45} 
+\markboth{\yourname}{\yourname\\}
+%%% ===================================================================
+
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage[osf]{mathpazo}
+%\usepackage{lastpage}
+\usepackage{amsmath,amsfonts,graphicx}
+\usepackage{clrscode}
+\usepackage[T1]{fontenc}
+\definecolor{mdb}{rgb}{0.3,0.02,0.02} 
+\definecolor{cit}{rgb}{0.05,0.2,0.45} 
+\pagestyle{fancy}
+\renewcommand\headrulewidth{0pt} % Removes funny header line 
+\rhead{\sc{\course\ -- shelat -- \duedate}\hfill{\Huge\sc mid}\hfill\thepage}
+\cfoot{}
+\fancyfootoffset{.95in}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{problem}{\sc\color{cit}problem}
+
+\def\sol{1}
+\newcommand{\solution}[2]{\ifnum\sol=1\medskip\noindent{\color{cit}\textbf{Solution: }#1}\else#2\fi}
+
+\begin{document}
+\begin{enumerate}
+    \item[---] You will be
+      graded on  {\em clarity},  {\em correctness}, and  {\em precision}.  When asked to present an algorithm, you should give at least 2-3 sentences explaining your approach, then pseudo-code,  then a run-time analysis, and a short explanation for why the algorithm is correct.  For example, in the case of dynamic programming problems, be sure to define what the variables in your equation represent in words and  give an equation explaining the recursive structure of the problem.  Do not write contradictory or ambiguous statements in your answers.
+
+    \item[---] You may consult the lecture slides as posted on my website under 22s-5800. No other external resources or aids are allowed.
+
+    \item[---] This is an individual exam.  You must not discuss the exam problems with anyone else except the course staff. Do not give or receive any assistance to anyone else in the course.  Prepare and type each answer individually without assistance.   
+
+    \item[---] You must tag the pages of your solution when you submit in Gradescope.
+
+    \end{enumerate}
+    
+
+    \renewcommand{\labelenumi}{{\bf (\alph{enumi})}}
+    
+    
+\begin{problem} Fewer Routes with 3 hops\end{problem}
+
+Your second homework asked you to construct a $\Theta(n\log n)$-segment North-South route system (i.e., all of the routes in the system are only allowed to move from $i$ to $j>i$) that allows any commuter to get from stop $i$ to $j$ using at most 2 segments.  
+
+In this problem, we design a new North-South system
+that allows any commuter to get from stop $i$ to $j>i$ in at most 3 ``hops", but only requires $\Theta(n\log\log n)$ segments.   Hint: the basic idea is to divide the $n$ stops into groups of size $\lceil {\sqrt{n}\ } \rceil$.  Build a system for these groups recursively so that any travel entirely within these groups can be accomplished in 3 hops.   In addition, each group has  designated ``hubs" which have both incoming and out-going segments to other stops.   It is then possible to add $\Theta(n)$ segments to and from these hubs so that a person can get from any stop $i$ to any stop $j$ within another group using at most 3 route segments. Note: these extra routes cannot start at a node $j$ and go backwards to a node $i<j$.
+
+\begin{enumerate}
+\item Fully describe this scheme in 3-4 sentences.  Clearly specify how to add the $\Theta(n)$ segments to implement the 3-hop property in your route system.
+
+\item State a recurrence that counts the segments required by your route system.
+
+\item Prove a tight upper bound on your recurrence using induction.  
+\end{enumerate}
+\newpage
+\noindent \textbf{Ans.}
+\begin{enumerate}
+    \item Let the stops be numbered from $(1, \ldots, n)$. Now we divide the stops into groups of size $\lceil {\sqrt{n}\ } \rceil$. So first group has $(1,2,...,\lceil {\sqrt{n}\ } \rceil)$, second group has $(\lceil {\sqrt{n}\ } \rceil +1,\lceil {\sqrt{n}\ } \rceil+2,...,2\lceil {\sqrt{n}\ } \rceil)$ and so on. There will be total of $\lceil {\sqrt{n}\ } \rceil$ such groups.\\
+    Let the groups be denoted by numbers $G_1,G_2,...,G_{\sqrt{n}}$. Within each group we can connect all stops to the last stop(hub). It will take a total of $\lceil {\sqrt{n}\ } \rceil-1$ segments for each group. So for $\lceil {\sqrt{n}\ } \rceil$ groups total number of incoming incoming segments = $\lceil {\sqrt{n}\ } \rceil*(\lceil {\sqrt{n}\ } \rceil-1) = \Theta(n)$ incoming segments.\\
+    We also connect last stop of $G_i$ to first stop of every group $G_k$ such that $i<k\leq\lceil {\sqrt{n}\ } \rceil$. Thus total outgoing segments for $\lceil {\sqrt{n}\ } \rceil$ such groups = $1+2+...+(\lceil {\sqrt{n}\ } \rceil-1) = \frac{(\lceil {\sqrt{n}\ } \rceil-1)(\lceil {\sqrt{n}\ } \rceil)}{2} = \Theta(n)$ total outgoing segments.
+    Thus the total number of segments from all these hubs $= \Theta(n)$.
+    \item Adding segments in the above mentioned methods leads to a maximum hops of $3$ from $i$ to $j$ when $i$ and $j$ are in different Groups. We can recursively add segments within these $\lceil {\sqrt{n}\ } \rceil$ groups to get $3$ hop segments within each groups. Hence the recurrence relation for count of segments becomes
+    $$S(n) = \lceil\sqrt{n}\rceil*S(\lceil\sqrt{n}\rceil)+\Theta(n)$$
+    \item The total number of incoming and outgoing segments for all the hubs = $\lceil {\sqrt{n}\ } \rceil*(\lceil {\sqrt{n}\ } \rceil-1) + \frac{(\lceil {\sqrt{n}\ } \rceil-1)(\lceil {\sqrt{n}\ } \rceil)}{2}$ which is upper bounded by $2n$ for large values of $n$.
+    Thus we can write the recurrence equation as $S(n) \leq \lceil\sqrt{n}\rceil*S(\lceil\sqrt{n}\rceil)+2n$.\\
+    \textbf{Hypothesis:} $S(n) \leq 100*(n\log\log n)$\\
+    Validity for small value of $n$
+    \begin{equation}
+        \begin{split}
+           S(4) &\leq 2*S(2)+4\\
+           &= 2*2+2\\
+           &\leq 100*(4 \log\log 4)
+        \end{split}
+    \end{equation}
+    Thus it is valid for small values of $n$.\\
+    Let there be a positive integer $k$ such that the equation is valid for all $n \leq k$.\\
+    Thus, $S(k) \leq 100*(k\log\log k)$.\\
+    \noindent Now, for $n=k+1$, we have
+    \begin{equation}
+    \begin{split}
+       S(k+1) &\leq \lceil\sqrt{k+1}\rceil*S(\lceil\sqrt{k+1}\rceil)+2(k+1)\\
+              &\leq \sqrt{k+1}*S(\sqrt{k+1})+2(k+1)\\
+              &\leq \sqrt{k+1}*(100*(\sqrt{k+1}\log\log \sqrt{k+1}))+2(k+1)\\
+              &= 100*(k+1)*(\log\log (k+1)- \log 2)+2(k+1)\\
+              &= 100*(k+1)*(\log\log (k+1))- (100\log 2-2)*(k+1)\\
+              &\leq 100*(k+1)*(\log\log (k+1))
+    \end{split}
+\end{equation}
+    Which is the required RHS. Hence using Principle of Mathematical Induction, we can say that $S(n) \leq 100*(n\log\log n)$.\\
+    Thus we have $\mathbf{S(n) = O(n\log\log n)}$
+    
+\end{enumerate}
+\newpage    
+
+\begin{problem}Top earnings\end{problem}
+You manage a hedge fund.  Suppose you are given an array of numbers $a_1,\ldots,a_n$ that summarizes a trader's earnings (or losses)  for $n$ days. 
+Your goal is to present a dynamic programming algorithm that computes the most lucrative trading period for this trader; i.e., your algorithm must find the pair $(i,j)$ where $i\leq j$ that maximizes the sum $s=\sum_{k=i}^j a_k$.  The algorithm should output $(i,j,s)$ and run in $\Theta(n)$ time.
+
+\begin{enumerate}
+  \item Define a variable $\textsc{best}_n$ in the style of DP solutions that can help solve this problem. Use sentences to explain what the variable represents.
+
+  \item Provide an equation that defines this variable.
+  $$ \textsc{best}_n = $$
+  
+  \item Provide pseudo-code for a $\Theta(n)$-time algorithm.   Prove your algorithm correct and analyze its running time.  (Assume additions are $O(1)$-time operations.) Your pseudo-code should require $<20$ lines in total and should output $(i,j,s)$.
+\end{enumerate}
+\noindent \textbf{Ans.}
+\begin{enumerate}
+    \item For the given array of numbers $a_1,\ldots,a_n$, let us consider a variable $\textsc{best}_i$ representing the most lucrative trading that includes $i^{th}$ day. \\
+    Now, $i^{th}$ day can be included in period ending at $i-1$ or we can start a new period with that day.\\
+    If $i^{th}$ day is included in previous period, its earnings is added to previous streak, and if starting a new period, it will be the only earning. The most lucrative trading including $i$ is the maximum of these two possibilities.
+    \item Thus we can write a DP-Equation for $\textsc{best}_n$ as follows:
+    \begin{equation}\label{2_1}
+        \begin{split}
+           \textsc{BEST}_n &= \max
+           \begin{cases}
+                \textsc{BEST}_{n-1} + a_n\\
+                a_n
+            \end{cases}\\
+        \end{split}
+    \end{equation}
+    Based on this, $\textsc{best}_1$ will be $a_1$.
+    \item Since $\textsc{best}_i$ represents the most lucrative trading period that includes $a_i$ and ends at $i^{th}$ day, and the most lucrative trading period for the trader could end at any day, the most lucrative trading period for the trader is the maximum value of $\textsc{best}_i$ for $i \in \{1,\ldots,n\}$.\\
+    We can keep track of the starting indices of the most lucrative trade ending at $i^{th}$ day ($\textsc{start}_i$), based on which of the two conditions for $\textsc{best}_i$ results the maximum.\\
+    \newpage
+    Pseudocode for $\proc{TopEarnings}$:
+    \begin{codebox}
+    \Procname{$\proc{TopEarnings}(a_1,\ldots,a_n)$}
+    \li $(\textsc{best}_1, \textsc{start}_1) \leftarrow (a_1,1)$
+    \li \textbf{for} $i \leftarrow \{2, \ldots, n\}$
+    \li \quad \textbf{if} $\textsc{best}_{i-1} > 0$
+    \li \quad \quad $(\textsc{best}_i, \textsc{start}_i)  \leftarrow (a_i + \textsc{best}_{i-1}, \textsc{start}_{i-1})$ 
+    \li \quad \textbf{else}
+    \li \quad \quad $(\textsc{best}_i, \textsc{start}_i)  \leftarrow (a_i, i)$
+    \li $k\leftarrow 1$
+    \li \textbf{for} $i \leftarrow \{2, \ldots, n\}$
+    \li \quad \textbf{if} $\textsc{best}_{i} > \textsc{best}_{k}$
+    \li \quad \quad $k \leftarrow i$
+    \li \textbf{return} $(\textsc{start}_k, k, \textsc{best}_k)$
+    \end{codebox}
+    
+    TIME COMPLEXITY ANALYSIS:\\
+    Line $2$ will be called for $\Theta(n)$ times. So $\textsc{best}_i$ and $\textsc{start}_i$ will be computed $\Theta(n)$ times. Best end index($k$) is also calculated in $\Theta(n)$. All other lines take $\Theta(1)$.\\
+    Hence the overall time complexity of $\proc{TopEarnings}(a_1,\ldots,a_n)$ is $\Theta(n)$.
+    \end{enumerate}
+
+\newpage    
+
+\begin{problem}{COVID testing}\end{problem}
+During this pandemic, epidemiologists have been faced with many challenging problems.  One issue that arose was tracking the dominant variant of the virus that was infecting the population.
+
+Suppose a testing lab is given $n$ viral samples from a population on a given day.  Using specialized test equipment, it is possible to use a \textsc{compare} test to determine whether two samples are the same or different variants.  Although this test is expensive, it is faster and cheaper than running full genetic sequencing on both strands and then comparing the sequences; however, the test only returns whether the two samples are the same or not.
+
+On input the $n$ samples $(s_1,\ldots,s_n)$, give the pseudo-code of a divide and conquer algorithm that uses only $\Theta(n)$ calls to \textsc{compare}$(s_i,s_j)$  to determine if there is one variant that is a majority among the day's samples.  Your algorithm simply outputs ``yes" or "no" if there is a majority variant.
+
+In this case, a majority sample is one that occurs \emph{more} than $\lfloor n/2 \rfloor$ times. For example, if $n=100$, then the majority item occurs at least 51 times.  If $n=99$, the majority item occurs at least 50 times.
+
+Explain why your algorithm is correct. Analyze the number of tests your algorithms performs using a recurrence.
+
+Hint: this problem is similar to the counting problem from our first lecture. Be careful to handle all base cases properly. Your pseudo-code should require no more than 15 lines in total.
+\hfill
+
+\noindent \textbf{Ans.} Let us assume the given samples $(S_1,\ldots,S_n)$ has a majority variant $S_m$. If we divide the samples in pairs, we can find that there is atleast one pair of samples, both of which are same as $S_m$. Now for any given pair $(S_i, S_j)$ the following cases arise:
+\begin{enumerate}
+    \item \textsc{Compare}$(S_i,S_j)$ returns \textsc{Same}, and \textsc{Compare}$(S_m,S_i)$ returns \textsc{Same}
+    \item \textsc{Compare}$(S_i,S_j)$ returns \textsc{Same}, and \textsc{Compare}$(S_m,S_i)$ returns \textsc{Different}
+    \item \textsc{Compare}$(S_i,S_j)$ returns \textsc{Different}, \textsc{Compare}$(S_m,S_i)$ returns \textsc{Same}, and \textsc{Compare}$(S_m,S_j)$ returns \textsc{Different}
+    \item \textsc{Compare}$(S_i,S_j)$ returns \textsc{Different}, \textsc{Compare}$(S_m,S_i)$ returns \textsc{Different}, and \textsc{Compare}$(S_m,S_j)$ returns \textsc{Same}
+    \item \textsc{Compare}$(S_i,S_j)$ returns \textsc{Different}, \textsc{Compare}$(S_m,S_i)$ returns \textsc{Different}, and \textsc{Compare}$(S_m,S_j)$ returns \textsc{Different}
+\end{enumerate}
+For cases c,d, and e, if we remove both $S_i$ and $S_j$ from the list of sample, the majority among the remaining samples still remains $S_m$, since removing $0$ or $1$ samples of $S_m$ from $2$ samples, still makes $S_m$ as the majority.\\
+For cases a and b, we can replace $S_i$ and $S_j$ with a single sample of $S_i$ with frequency of $2$. Since a single sample can exist (last sample if $n$ is odd), we add it as $S_n$ with frequency $1$.\\
+We can recursively do these operations and add frequencies of \textsc{Same} pairs and replacing with single instance till atmost one sample remains. For cases c,d, and e, we can remove one of the sample having smaller frequency as removing it still wont change the majority sample $S_m$. 
+Since we removed many samples, the sample we get is the potential majority sample. We can check the majority sample with every other sample to get its actual frequency and confirm if the given samples contain a majority sample or not. Based on the above explanation, we can write Pseudocode for $\proc{MajorityTesting}$ as follows:
+\begin{codebox}
+\Procname{$\proc{MajorityTesting}(S_1, \ldots , S_n)$}
+\li Initialize $Freq_i \leftarrow 1$ for $i \leftarrow \{1, ..., n\}$
+\li $S_m$ = $\proc{PotentialMajority}(S, Freq)$
+\li $ActualFreq \leftarrow 0$
+\li Add $1$ to $ActualFreq$ whenever $\textsc{Compare}(S_i,S_m) = \textsc{Same}$ \textbf{for} $i \leftarrow \{1,\ldots, n\}$
+\li \textbf{if} $ActualFreq > \lfloor \frac{n}{2} \rfloor$ \textbf{return} Yes
+\li \textbf{else} \textbf{return} No
+\end{codebox}
+
+
+\begin{codebox}
+\Procname{$\proc{PotentialMajority}((S_1, \ldots , S_n), (F_1, \ldots, F_n))$}
+\li \textbf{if} $n = 0$ \textbf{return} None
+\li \textbf{if} $n = 1$ \textbf{return} $S_n$
+\li \textbf{for} $i \leftarrow \{1,3,5,...,\leq n\}$
+\li \quad \textbf{if} $\textsc{Compare}(S_i,S_{i+1}) = \textsc{Same}$
+\li \quad \quad Add $S_i$ in $SampleList$, Add $F_i+F_j$ in $FreqList$
+\li \quad \textbf{else if} $F_i\neq F_j$
+\li \quad \quad Add $\max_i^{i+1}\{F_k\}$ and corresponding $S_k$ in $FreqList $ and $SampleList$.
+\li \textbf{if} $n$ is odd, Add $S_n$ in $SampleList$ and $F_n$ in $FreqList$
+\li \textbf{return} $\proc{PotentialMajority(SampleList, FreqList)}$
+\end{codebox}
+
+\noindent ANALYSIS ON NUMBER OF CALLS TO $\textsc{Compare}(S_i,S_j)$\\
+In $\proc{PotentialMajority}$, $\textsc{Compare}$ is called in line $4$ for maximum of $\lfloor n/2 \rfloor$ times. Also In line $9$, the maximum number of samples for next call to $\proc{PotentialMajority}$ will be $\lceil n/2 \rceil$ since minimum one sample is removed during each iteration. Along with it, $\textsc{Compare}$ is called $n$ times in $\proc{MajorityTesting}$ line $4$. Based on these, we can write the following recurrence relationship:
+$$C(n) = C(\lceil n/2 \rceil) + \lfloor n/2 \rfloor+n$$ 
+Where $C(n)$ represents the number of calls to $\textsc{Compare}$ for $n$ samples. Let $a = 1$, $b=2$ and $f(n) = \lfloor n/2 \rfloor+n = \Theta(n)$. With this, we can write above equations in the form of
+$C(n) = aC(n/b) + f(n)$.
+
+Since $n^{\log_b a} = n^{\log_{2} 1} = n^0 = 1$. Also we have $f(n) = \Theta(n)$. Hence, by using Case $3$ of Master's Theorem, we have
+$$C(n) = \Theta(n)$$
+
+\newpage
+\begin{problem}{Day Trader's Decisions}\end{problem}
+A day trader wants to trade $n\cdot 100$ shares of the stock AAPL in blocks of 100.  Temporary market rules prevent her from short-selling; in other words, she must own a block of shares before selling them.  To avoid price slippage from large orders, she can only buy or sell 100 shares, i.e., 1 block, at a time. At the end of the day, she wants to own zero shares of AAPL. 
+
+How many ways can she do her trading?  For example, when $n=2$, she can do "BUY, SELL, BUY, SELL" or "BUY, BUY, SELL, SELL" and so there are $2$ ways. Present your answer as a recurrence and clearly explain why the recurrence captures this number.
+\hfill
+
+\noindent \textbf{Ans.} A valid sequence of trading will have number of BUYs $\geq$ number of SELLs at any point in the sequence and number of BUYs $=$ number of SELLs in the end. Based on this, we can pair a BUY$_i$ with its corresponding SELL$_i$. For example, "BUY$_1$, SELL$_1$, BUY$_2$, SELL$_2$" or "BUY$_1$, BUY$_2$, SELL$_2$, SELL$_1$".\\
+Now, for any $i$, if we remove both BUY$_1$ and SELL$_1$, two sequences are formed before and after SELL$_1$. Since the original sequence is valid, the new sequences made should also be valid. If the left sequence is of $i$ trades then the right sequence will be of $n-i-1$ trades as we removed one pair of trade(BUY$_1$ and SELL$_1$) to divide into two sequences. Since both are instances of valid sequences, we can calculate number of different sequences formed with left and right sequence trade sizes $i$ and $n-i-1$ by multiplying number of valid sequences formed by these two sequences. Iterating over $i$ will give the number of ways to trade $n$ trades.\\
+It can also be the case that either of the sequence remains empty. Thus size = $0$, It is the case when the sequence is like "BUY$_1$, SELL$_1$, $\ldots$" (if left sequence is empty) or "BUY$_1$, $\ldots$, SELL$_1$"(if right sequence is empty). For this we can simply add the number of ways trading size $n-1$ is valid.\\
+
+Based on the above observations, we can write the recurrence relation as:
+\begin{equation}
+    \begin{split}
+       T(n) = 
+       \begin{cases}
+            0, \text{ if } n=0\\
+            1, \text{ if } n=1\\
+            2*T(n-1)+\sum_{i=1}^{n-2}T(i)*T(n-1-i)
+        \end{cases}
+    \end{split}
+\end{equation}
+\newpage    
+
+
+\begin{problem}{Faster Price Run} (Extra Credit)\end{problem}
+This question develops the challenge problem from Price Run in Homework 3.
+In the problem you are given a list of closing stock ticker prices $p_1,p_2,\ldots,p_n$ and the goal is to find the length of the longest (not necessarily consecutive) streak of prices  that  increase or stays the same.  For example, given the prices $2,5,2,6,3,3,6,7,4,5$, there is the streak $2,5,6,6,7$ of prices that increase  or stay the same, but an even longer streak is $2,2,3,3,4,5$. Thus, the answer is 6.  
+
+One solution to this problem is to define a variable \textsc{long}$_i$ to be the length of the longest sub-sequence of prices that only increase or stay the same in height among the prices from $p_{1},\ldots,p_i$ \emph{that ends with price $p_i$}. 
+
+First observe that $\textsc{long}_1=1$. Next, note that if  $p_i$ is larger than $p_j$, then  $i$ can be added to the longest subsequence of prices that ended at $j$ to form a longer subsequence. 
+In other words, if  $p_{i} \geq p_j$, then one can form
+a sequence of length $1+\textsc{long}_j$ by considering 
+$...,p_{j},p_{i}$ where the $...$ represents the prices in the 
+longest sequence that ends at price $j$. Thus we have
+
+\begin{align}
+\textsc{long}_{i}  &= \max_{j=1}^{i-1} \left\{ \begin{array}{lr}
+1 & \textrm{ if } p_{j} > p_i \\
+\textsc{long}_{j}+1 & \textrm{ if } p_{j} \leq p_i
+\end{array}\right. \label{mupdate}
+\end{align}
+
+
+Finally, the longest overall sub-sequence is simply $\max_{i=1}^n\{ \textsc{long}_i \}$. Computing each value $\textsc{long}_i$ takes $O(n)$.  There are $n$ such values; thus, the overall running time is $\Theta(n^2)$
+because the last step of finding the max takes $\Theta(n)$.
+
+\begin{codebox}
+\Procname{$\proc{Prices}(h_1,\ldots,h_n)$}
+\li $\textsc{long}_1 \gets 1$ 
+\li \For $i=2$ to $n$
+\li \ \ $\textsc{long}_{i}  = \max_{j=1}^{i-1} \left\{ \begin{array}{lr} 1 & \textrm{ if } p_{j} > p_i \\ \textsc{long}_{j}+1 & \textrm{ if } p_{j} \leq p_i \end{array}\right.$ \label{line:loop}
+\li Output $\max\{\textsc{long}_1,\ldots,\textsc{long}_n\}$
+\end{codebox}
+
+
+In this problem you will improve the solution to an $O(n\log n)$ time algorithm.  Notice that line~\ref{line:loop} uses a linear scan requiring $\Theta(i)$ steps to find the price that is smaller than  $p_i$ and currently has the largest length.
+
+We can improve our solution by maintaining a slightly different DP variable that allows us to use binary search instead of linear scan for this step.  The idea is to consider the variable \textsc{fast}$_{i}$ which maintains ``the \emph{index} of the {\em smallest} price that ends a sequence of length $i$ that increases or stays the same."  If no such value exists, we define it to be $\infty$.
+
+%To compute \textsc{fast}$_i$, note that it will be it is index $k$ which has the smallest $p_k$ among
+%the set of indicies 
+% $$\textsc{fast}_{i,i} = \textargmin_k \{ p_k \mbox{ such that } 
+%     k>\textsc{fast}_{(i-1),(i-1)} \wedge 
+%     p_k>p_{\textsc{fast}_{i-1}} \}$$
+
+\begin{enumerate}
+  \item (1 pt) In a problem of size 1, what is \textsc{fast}$_1$ ?
+
+  \item (5 pt) Assuming we have computed \textsc{fast}$_i$ for $i=1,\ldots,j$,
+  explain in words how to update the values given the next price $p_{j+1}$.
+
+  \item (4 pt) (Why we maintain indicies?)  Assuming we have computed this 
+  \textsc{fast}$_i$ variable for all $i=1,\ldots,n$, and we know that
+  the longest price run is $j$, how can we print the prices which correspond to this longest run?
+
+
+\end{enumerate}
+
+\newpage
+\begin{enumerate}
+    \item Since \textsc{Fast}$_i$ maintains the \emph{index} of the {\em smallest} price that ends a sequence of length $i$ that increases or stays the same, for a problem size of $1$, \textsc{Fast}$_1 = 1$.
+    \item Given \textsc{Fast}$_i$ for $i=1,\ldots,k$, the values $p(\textsc{Fast}_i)$ for $i=1,\ldots,k$ is in increasing order since $p(\textsc{Fast}_i)$ represents the smallest price that ends the sequence of length $i$ that increases or stays the same. \\
+    Now, next price $p(j+1)$ can either reduce one of $p(\textsc{Fast}_i)$ for $i=1,\ldots,k$ when there is a length $i$ for which $p(\textsc{Fast}_i) > P(j+1)$ and update \textsc{Fast}$_i = j+1$ or increase the maximum length to $k+1$ if no such $i$ exists and represent $\textsc{Fast}_{k+1} = j+1$.\\
+    We can binary search for for $i=1,\ldots,k$ and find the length $i$ such that $p(\textsc{Fast}_{i-1}) \leq p(j+1) < p(\textsc{Fast}_i)$, if such $i$ exists, we can change \textsc{Fast}$_i = j+1$. If $p(j+1) \geq p(\textsc{Fast}_k)$, then it increase the maximum length of subsequence by $1$ and hence, $\textsc{Fast}_{k+1} = j+1$.
+    \item Given we have calculated \textsc{Fast}$_i$ for $i=1,\ldots,j$ for all prices $p(1, ..., n)$ and have $j$ as the length of maximum length of a sequence that increases or stays the same and \textsc{Fast}$_j$ representing the index of such sequence. Thus $p(\textsc{Fast}_{j})$ for $i=n$ will be the last element in this sequence. Now we need to find second to last, which represents \textsc{Fast}$_{j-1}$ calculated for $i = \textsc{Fast}_{j}-1$. We can backtrack it till $j>0$ and reverse the sequence to get the longest subsequence of prices that increases or remains the same.
+\end{enumerate}
+
+\end{document}
+

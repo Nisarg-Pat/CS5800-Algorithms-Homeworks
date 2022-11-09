@@ -1,0 +1,151 @@
+%--------- Student instruction: change this by adding your neu id into the {}
+\def\yourname{patel.nisargs}
+%-------------------------------------------------------------------------------------------------------------
+
+%% ================= no need to edit any of this stuff
+% --- no need to change anything in this section -----------------------------------------------------
+\def\homework{1} % 0 for solution, 1 for problem-set only
+\def\duedate{wed jan 26, 2022 at 11.59p}
+\def\duelocation{via \href{https://gradescope.com/courses/331917}{gradescope}}
+\def\hnumber{0}
+\def\prof{abhi shelat}
+\def\course{\href{https://shelat.khoury.neu.edu/22s-5800}{cs5800 algorithms s'22}}
+
+\documentclass[11pt]{article}
+%%% ==== standard installations of latex include all of the files that are referenced in this section.  However,
+%%% ==== if you are having compile problems, consider commenting some of these commands out 
+\usepackage[colorlinks,urlcolor=blue]{hyperref}
+\usepackage[osf]{mathpazo}
+\usepackage{amsmath,amsfonts,graphicx}
+\usepackage{latexsym}
+\usepackage[top=1in,bottom=1.4in,left=1.5in,right=1.5in,centering]{geometry}
+\usepackage{color}
+\definecolor{mdb}{rgb}{0.3,0.02,0.02} 
+\definecolor{cit}{rgb}{0.05,0.2,0.45} 
+\markboth{\yourname}{\yourname}
+%%% ===================================================================
+
+
+%%% ============ should be no need to edit anything in this section ====================
+\newenvironment{proof}{\par\noindent{\it Proof.}\hspace*{1em}}{$\Box$\bigskip}
+\newcommand{\qed}{$\Box$}
+\newcommand{\alg}[1]{\mathsf{#1}}
+\newcommand{\handout}{
+   \renewcommand{\thepage}{H\hnumber-\arabic{page}}%
+   \noindent%
+   \begin{center}%
+      \vbox{%
+    \hbox to \columnwidth {\sc{\course} --- abhi shelat \hfill}%
+    \vspace{-2mm}%
+    \hbox to \columnwidth {\sc due \MakeLowercase{\duedate} \duelocation\hfill {\Huge\color{mdb}H\hnumber.\yourname}}%
+      }
+   \end{center}
+   \vspace*{2mm}
+}
+\newcommand{\solution}[1]{\medskip\noindent\textbf{Solution:}#1}
+\newcommand{\bit}[1]{\{0,1\}^{ #1 }}
+\newtheorem{problem}{\sc\color{cit}problem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+%%% ===================================================================
+\thispagestyle{empty}
+
+\begin{document}\handout
+
+\noindent You may collaborate with other students on the homework but you must submit your own individually written solution, identify your collaborators, and acknowledge any external sources that you consult.
+
+Please write each answer on a separate page and use \emph{exactly 3 pages} for your submission. You can do this using the \verb=\newpage= command between your answers.  See the \texttt{hw1-template.tex} template file provided on the course website for this assignment.
+
+\begin{problem}Passage\end{problem}
+\noindent Typeset your favorite passage from a book.
+
+\hfill
+
+\noindent \textbf{Ans.}
+\hfill
+
+``I will not eat them in the rain.
+I will not eat them on a train.
+Not in the dark! Not in a tree!
+Not in a car! You let me be!
+I do not like them in a box.
+I do not like them with a fox.
+I will not eat them in a house.
+I do not like them with a mouse.
+I do not like them here or there.
+I do not like them anywhere!
+I do not like green eggs and ham!
+I do not like them, Sam-I-am.
+
+You do not like them. So you say.
+Try them! Try them! And you may.
+Try them and you may, I say.
+Sam! If you will let me be,
+I will try them. You will see.
+
+Say! I like green eggs and ham!
+I do! I like them, Sam-I-Am!
+And I would eat them in a boat.
+And I would eat them with a goat \ldots
+And I will eat them, in the rain.
+And in the dark. And on a train.
+And in a car. And in a tree.
+They are so good, so good, you see!
+So I will eat them in a box.
+And I will eat them with a fox.
+And I will eat them in a house.
+And I will eat them with a mouse.
+And I will eat them here and there.
+Say! I will eat them anywhere!
+I do so like green eggs and ham!
+\textbf{Thank you! Thank you, Sam-I-Am.}''
+
+\hfill
+
+\noindent From \emph{``Green Eggs and Ham''}, by Dr. Seuss.
+
+% add a \newpage to start the next problem on a new page
+\newpage
+
+\begin{problem}{Asymptotic notation}\end{problem}
+
+\noindent Let $f$ be a function. Give a formal definition of the set  $\Theta(f)$.
+
+$$\Theta(f) = \left\{\ \parbox{2.5in}{
+functions $g$ such that 
+...  % put the rest of your answer here
+}  \right\}$$
+%
+Hint: Use the \verb=\exists= command to make the ``there exists'' symbol $\exists$, and the \verb=\forall= command to make the  ``for all'' symbol $\forall$.
+
+\hfill
+
+\noindent \textbf{Ans.}
+\hfill
+
+$$\Theta(f) = \left\{\ \parbox{4in}{
+functions $g$ such that 
+$\exists$ constants $c_1$, $c_2$, and $n_0 \geq 0$ such that
+$0 \leq c_{1} f(n) \leq g(n) \leq c_{2} f(n)$ \forall  $ n \geq n_{0}$
+}  \right\}$$
+
+\newpage
+
+\begin{problem}{includegraphics command}\end{problem}
+
+\noindent Learn how to include drawings in your documents with the \verb=\includegraphics{file}=
+command by submitting a caricature of me.
+
+\hfill
+
+\noindent \textbf{Ans.}
+\hfill
+
+\begin{figure}[h]
+\centering
+    \includegraphics[]{caricature.jpg}
+    \caption{A caricature of Prof. Abhi Shelat.}
+\end{figure}
+
+
+\end{document}
